@@ -10,10 +10,11 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func Api() {
+func Api() error {
 	db, err := database.Init()
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 
 	app := echo.New()
@@ -25,6 +26,8 @@ func Api() {
 	app.Use(middleware.Secure())
 
 	app.Use(middleware.BodyLimit("10M"))
+
+	app.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(500)))
 
 	app.Use(middleware.Gzip())
 
@@ -39,4 +42,6 @@ func Api() {
 	purchaseHandler.PATCH("/purchase/:id", handler.UpdateTask)
 
 	app.Start(":8080")
+
+	return nil
 }
