@@ -17,8 +17,9 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{DB: db}
 }
 
-func (r *Repository) GetAll(category string) ([]data.Purchase, error) {
+func (r *Repository) GetAll(category string) ([]data.Purchase, float64, error) {
 	var purchases []data.Purchase
+	var totalAmount float64
 	var query string
 	var args []interface{}
 
@@ -31,7 +32,7 @@ func (r *Repository) GetAll(category string) ([]data.Purchase, error) {
 
 	rows, err := r.DB.Query(query, args...)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer rows.Close()
 
@@ -40,17 +41,19 @@ func (r *Repository) GetAll(category string) ([]data.Purchase, error) {
 
 		err = rows.Scan(&purchase.ID, &purchase.Title, &purchase.Price, &purchase.Date, &purchase.Category)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 
 		purchases = append(purchases, purchase)
+
+		totalAmount += purchase.Price
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	return purchases, nil
+	return purchases, totalAmount, nil
 }
 
 func (r *Repository) Create(purchase *data.SetPurchase) error {

@@ -21,7 +21,7 @@ func NewHandler(r *repos.Repository) *Handler {
 
 func (h *Handler) GetAllTasks(c echo.Context) error {
 	query := c.QueryParam("category")
-	tasks, err := h.Repository.GetAll(query)
+	tasks, total, err := h.Repository.GetAll(query)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -33,8 +33,16 @@ func (h *Handler) GetAllTasks(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, tasks)
+	if total == 0 {
+		return c.JSON(http.StatusNotFound, map[string]string{
+			"message": "Total amount is 0. Add purchases",
+		})
+	}
 
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"tasks":       tasks,
+		"totalAmount": total,
+	})
 }
 
 func (h *Handler) CreateTask(c echo.Context) error {

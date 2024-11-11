@@ -9,7 +9,7 @@ import (
 type Purchase struct {
 	ID       uint      `json:"id"`
 	Title    string    `json:"title" validate:"required,min=3,max=255"`
-	Price    string    `json:"price" validate:"required,numeric"`
+	Price    float64   `json:"price" validate:"required,numeric"`
 	Date     time.Time `json:"date"`
 	Category string    `json:"category" validate:"required,oneof=shop food entertainment"`
 }

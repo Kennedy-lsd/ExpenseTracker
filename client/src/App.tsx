@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   const [newTaskName, setNewTaskName] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [newTaskAmount, setNewTaskAmount] = useState<string>("");
@@ -15,8 +16,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const tasksData = await getTasks(filterCategory);
-        setTasks(tasksData);
+        const { tasks, totalAmount } = await getTasks(filterCategory);
+        setTasks(tasks);
+        setTotalAmount(totalAmount);
       } catch (error) {
         console.error("Failed to fetch tasks", error);
       }
@@ -156,29 +158,41 @@ const App: React.FC = () => {
         </div>
       </div>
 
+      {/* Total Amount */}
+      <div className="mb-4">
+        <h2>Total Amount</h2>
+        <p className="text-success">{totalAmount} Є</p>{" "}
+        {/* Display total amount */}
+      </div>
+
       {/* Task List */}
       <h2>Tasks</h2>
       <ul className="list-group">
-        {tasks.map((task) => (
-          <li
-            key={task.id}
-            className="list-group-item d-flex justify-content-between align-items-center bg-dark text-light border-secondary"
-          >
-            <div>
-              <strong>{task.title}</strong> - {task.price}Є on{" "}
-              {formatDate(task.date)} in the{" "}
-              <em>
-                {task.category.charAt(0).toUpperCase() + task.category.slice(1)}
-              </em>
-            </div>
-            <button
-              className="btn btn-outline-danger btn-sm"
-              onClick={() => handleDeleteTask(task.id)}
+        {tasks.length > 0 ? (
+          tasks.map((task) => (
+            <li
+              key={task.id}
+              className="list-group-item d-flex justify-content-between align-items-center bg-dark text-light border-secondary"
             >
-              Delete
-            </button>
-          </li>
-        ))}
+              <div>
+                <strong>{task.title}</strong> - {task.price}Є on{" "}
+                {formatDate(task.date)} in the{" "}
+                <em>
+                  {task.category.charAt(0).toUpperCase() +
+                    task.category.slice(1)}
+                </em>
+              </div>
+              <button
+                className="btn btn-outline-danger btn-sm"
+                onClick={() => handleDeleteTask(task.id)}
+              >
+                Delete
+              </button>
+            </li>
+          ))
+        ) : (
+          <li className="list-group-item">No tasks found</li>
+        )}
       </ul>
     </div>
   );
