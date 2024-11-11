@@ -102,6 +102,7 @@ const App: React.FC = () => {
             <option value="shop">Shop</option>
             <option value="food">Food</option>
             <option value="entertainment">Entertainment</option>
+            {/* Add more options as needed */}
           </select>
         </div>
 

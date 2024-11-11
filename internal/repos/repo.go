@@ -56,6 +56,10 @@ func (r *Repository) GetAll(category string) ([]data.Purchase, error) {
 func (r *Repository) Create(purchase *data.SetPurchase) error {
 	query := "INSERT INTO purchases (title, price, category) VALUES ($1, $2, $3) RETURNING id, date"
 
+	if err := purchase.Validate(); err != nil {
+		return err
+	}
+
 	err := r.DB.QueryRow(query, purchase.Title, purchase.Price, strings.ToLower(purchase.Category)).Scan(&purchase.ID, &purchase.Date)
 	if err != nil {
 		return err

@@ -3,12 +3,12 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/api";
 
 export const getTasks = async (filterCategory: string) => {
-  let url = `${API_URL}/purchase`; // Default URL for fetching all tasks
+  let url = `${API_URL}/purchase`;
   if (filterCategory) {
     url = `${API_URL}/purchase?category=${filterCategory}`; // Append filterCategory if provided
   }
 
-  console.log("Request URL: ", url); // Log URL to check if it's correct
+  console.log("Request URL: ", url);
 
   const response = await axios.get(url);
   return response.data;
