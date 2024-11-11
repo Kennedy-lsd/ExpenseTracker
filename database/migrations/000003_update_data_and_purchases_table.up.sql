@@ -1,0 +1,2 @@
+ALTER TABLE purchases
+ADD COLUMN category VARCHAR(100);

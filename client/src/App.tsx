@@ -6,6 +6,8 @@ import { formatDate } from './utils/formatDate';
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskName, setNewTaskName] = useState('');
+  const [newCategory, setNewCategory] = useState('');
+
   const [newTaskAmount, setNewTaskAmount] = useState<string>('');
 
   useEffect(() => {
@@ -23,10 +25,11 @@ const App: React.FC = () => {
 
   const handleCreateTask = async () => {
     try {
-      const newTask = await createTask({ title: newTaskName, price: newTaskAmount });
+      const newTask = await createTask({ title: newTaskName, price: newTaskAmount , category: newCategory });
       setTasks([...tasks, newTask]);
       setNewTaskName('');
       setNewTaskAmount('');
+      setNewCategory('')
     } catch (error) {
       console.error("Failed to create task", error);
     }
@@ -59,6 +62,12 @@ const App: React.FC = () => {
           value={newTaskAmount} 
           onChange={(e) => setNewTaskAmount(e.target.value)} 
         />
+        <input 
+          type="text" 
+          placeholder="Task Category" 
+          value={newCategory} 
+          onChange={(e) => setNewCategory(e.target.value)} 
+        />
         <button onClick={handleCreateTask}>Add Task</button>
       </div>
 
@@ -66,7 +75,7 @@ const App: React.FC = () => {
       <ul>
         {tasks.map(task => (
           <li key={task.id}>
-            {task.title} - {task.price}Є on {formatDate(task.date)}
+            {task.title} - {task.price}Є on {formatDate(task.date)} in the {task.category}
             <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
           </li>
         ))}

@@ -28,7 +28,7 @@ func (r *Repository) GetAll() ([]data.Purchase, error) {
 	for rows.Next() {
 		var purchase data.Purchase
 
-		err = rows.Scan(&purchase.ID, &purchase.Title, &purchase.Price, &purchase.Date)
+		err = rows.Scan(&purchase.ID, &purchase.Title, &purchase.Price, &purchase.Date, &purchase.Category)
 		if err != nil {
 			return nil, err
 		}
@@ -44,9 +44,9 @@ func (r *Repository) GetAll() ([]data.Purchase, error) {
 }
 
 func (r *Repository) Create(purchase *data.SetPurchase) error {
-	query := "INSERT INTO purchases (title, price) VALUES ($1, $2) RETURNING id"
+	query := "INSERT INTO purchases (title, price, category) VALUES ($1, $2, $3) RETURNING id, date"
 
-	err := r.DB.QueryRow(query, &purchase.Title, &purchase.Price).Scan(&purchase.ID)
+	err := r.DB.QueryRow(query, &purchase.Title, &purchase.Price, &purchase.Category).Scan(&purchase.ID, &purchase.Date)
 	if err != nil {
 		return err
 	}
