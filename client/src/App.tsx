@@ -53,6 +53,7 @@ const App: React.FC = () => {
     <div className="App bg-dark text-light p-4" style={{ minHeight: "100vh" }}>
       <h1 className="text-success mb-4">Expense Tracker</h1>
 
+      {/* Create Task Form */}
       <div className="mb-4">
         <h2>Create Task</h2>
         <input
@@ -102,7 +103,6 @@ const App: React.FC = () => {
             <option value="shop">Shop</option>
             <option value="food">Food</option>
             <option value="entertainment">Entertainment</option>
-            {/* Add more options as needed */}
           </select>
         </div>
 
@@ -111,6 +111,7 @@ const App: React.FC = () => {
         </button>
       </div>
 
+      {/* Filter by Category */}
       <div className="mb-4">
         <h2>Filter by Category</h2>
         <div className="btn-group" role="group" aria-label="Category Filter">
@@ -155,6 +156,7 @@ const App: React.FC = () => {
         </div>
       </div>
 
+      {/* Task List */}
       <h2>Tasks</h2>
       <ul className="list-group">
         {tasks.map((task) => (
