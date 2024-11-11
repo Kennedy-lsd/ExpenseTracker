@@ -142,17 +142,6 @@ const App: React.FC = () => {
             }`}
             onClick={() => setFilterCategory("food")}
           >
-            Food
-          </button>
-          <button
-            type="button"
-            className={`btn ${
-              filterCategory === "entertainment"
-                ? "btn-primary"
-                : "btn-secondary"
-            }`}
-            onClick={() => setFilterCategory("entertainment")}
-          >
             Entertainment
           </button>
         </div>

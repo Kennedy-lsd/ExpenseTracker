@@ -22,6 +22,11 @@ func Api() {
 		AllowOrigins: []string{"http://localhost:5173"}, //Update with your frontend :)
 		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
 	}))
+	app.Use(middleware.Secure())
+
+	app.Use(middleware.BodyLimit("10M"))
+
+	app.Use(middleware.Gzip())
 
 	repository := repos.NewRepository(db)
 	handler := handlers.NewHandler(repository)
@@ -31,6 +36,7 @@ func Api() {
 	purchaseHandler.GET("/purchase", handler.GetAllTasks)
 	purchaseHandler.POST("/purchase", handler.CreateTask)
 	purchaseHandler.DELETE("/purchase/:id", handler.DeleteTask)
+	purchaseHandler.PATCH("/purchase/:id", handler.UpdateTask)
 
 	app.Start(":8080")
 }

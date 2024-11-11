@@ -74,3 +74,25 @@ func (h *Handler) DeleteTask(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]string{"message": "Stock was deleted"})
 }
+
+func (h *Handler) UpdateTask(c echo.Context) error {
+	id := c.Param("id")
+
+	taskID, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid task ID")
+	}
+
+	var updatedTask *data.Purchase
+	if err := c.Bind(&updatedTask); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request body")
+	}
+
+	if err := h.Repository.Update(taskID, updatedTask); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"message": "Task updated successfully",
+	})
+}

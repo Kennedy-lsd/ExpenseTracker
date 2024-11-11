@@ -20,7 +20,8 @@ This is the first version of the Expense Tracker App. The application allows you
 
 ### v2.1
 
-- Second release update (current): -**Add total amount**: Total amount checker has been added.
+- Second release update (current):
+  - **Add total amount**: Total amount checker has been added.
 
 ## Features
 

@@ -92,3 +92,14 @@ func (r *Repository) Delete(id int64) error {
 
 	return nil
 }
+
+func (r *Repository) Update(id int64, updatedTask *data.Purchase) error {
+	query := `UPDATE tasks SET title = ?, price = ?, category = ?, date = ? WHERE id = ?`
+
+	_, err := r.DB.Exec(query, updatedTask.Title, updatedTask.Price, updatedTask.Category, updatedTask.Date, id)
+	if err != nil {
+		return fmt.Errorf("failed to update task: %w", err)
+	}
+
+	return nil
+}
