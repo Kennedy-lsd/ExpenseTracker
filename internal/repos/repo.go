@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/Kennedy-lsd/ExpenseTracker/data"
 )
@@ -16,10 +17,19 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{DB: db}
 }
 
-func (r *Repository) GetAll() ([]data.Purchase, error) {
+func (r *Repository) GetAll(category string) ([]data.Purchase, error) {
 	var purchases []data.Purchase
-	query := "SELECT * FROM purchases"
-	rows, err := r.DB.Query(query)
+	var query string
+	var args []interface{}
+
+	if category != "" {
+		query = "SELECT * FROM purchases WHERE category = $1 ORDER BY id ASC"
+		args = append(args, category)
+	} else {
+		query = "SELECT * FROM purchases"
+	}
+
+	rows, err := r.DB.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +56,7 @@ func (r *Repository) GetAll() ([]data.Purchase, error) {
 func (r *Repository) Create(purchase *data.SetPurchase) error {
 	query := "INSERT INTO purchases (title, price, category) VALUES ($1, $2, $3) RETURNING id, date"
 
-	err := r.DB.QueryRow(query, &purchase.Title, &purchase.Price, &purchase.Category).Scan(&purchase.ID, &purchase.Date)
+	err := r.DB.QueryRow(query, purchase.Title, purchase.Price, strings.ToLower(purchase.Category)).Scan(&purchase.ID, &purchase.Date)
 	if err != nil {
 		return err
 	}

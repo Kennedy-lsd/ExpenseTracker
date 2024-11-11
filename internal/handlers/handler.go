@@ -20,7 +20,8 @@ func NewHandler(r *repos.Repository) *Handler {
 }
 
 func (h *Handler) GetAllTasks(c echo.Context) error {
-	tasks, err := h.Repository.GetAll()
+	query := c.QueryParam("category")
+	tasks, err := h.Repository.GetAll(query)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
